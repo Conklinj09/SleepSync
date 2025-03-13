@@ -6,7 +6,6 @@ app = Flask(__name__)
 @app.route("/log_sleep", methods=["POST"])
 def log_sleep():
     data = request.get_json()
-
     sleep_time = data.get("sleep_time")
     wake_time = data.get("wake_time")
     notes = data.get("notes")
