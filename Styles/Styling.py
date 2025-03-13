@@ -32,6 +32,19 @@ canvas.pack(fill="both", expand=True)
 # Create the galaxy-themed stars
 create_stars(canvas)
 
+
+from tkinter import PhotoImage
+
+def add_background_image():
+    img = PhotoImage(file="galaxy_background.png")  # Path to your image
+    canvas.create_image(0, 0, anchor="nw", image=img)
+    canvas.image = img  # Keep a reference to avoid garbage collection
+
+# Add this call inside the `root` setup to display the image
+add_background_image()
+
+
+
 # Create widgets
 sleep_time_label = tk.Label(root, text="Enter sleep time (HH:MM):", fg="black", font=("Arial", 14))
 sleep_time_label.pack(pady=10)
