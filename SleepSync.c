@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 struct SleepEntry {
     char date[20];
@@ -10,6 +11,7 @@ struct SleepEntry {
     char notes[200];
 };
 
+// Function to log sleep data
 void log_sleep_data(struct SleepEntry entry) {
     FILE *file = fopen("sleep_log.txt", "a");
     if (file != NULL) {
@@ -20,8 +22,8 @@ void log_sleep_data(struct SleepEntry entry) {
     }
 }
 
-// Function to calculate total sleep time in hours and minutes
-void calculate_sleep_duration(struct SleepEntry entry) {
+// Function to calculate total sleep time in minutes
+int calculate_sleep_duration(struct SleepEntry entry) {
     int sleep_minutes = entry.sleep_hour * 60 + entry.sleep_minute;
     int wake_minutes = entry.wake_hour * 60 + entry.wake_minute;
     int sleep_duration = wake_minutes - sleep_minutes;
@@ -30,12 +32,11 @@ void calculate_sleep_duration(struct SleepEntry entry) {
     if (sleep_duration < 0) {
         sleep_duration += 24 * 60;
     }
-
-    printf("Total sleep duration: %d hours %d minutes\n", sleep_duration / 60, sleep_duration % 60);
+    return sleep_duration;
 }
 
-// Function to calculate average sleep duration from the log
-void calculate_average_sleep_duration() {
+// Function to analyze trends (weekday vs weekend)
+void analyze_sleep_trends() {
     FILE *file = fopen("sleep_log.txt", "r");
     if (file == NULL) {
         printf("Error opening file for reading.\n");
@@ -43,26 +44,74 @@ void calculate_average_sleep_duration() {
     }
 
     struct SleepEntry entry;
-    int total_sleep_minutes = 0;
-    int total_entries = 0;
+    int weekday_sleep = 0, weekend_sleep = 0;
+    int weekday_count = 0, weekend_count = 0;
 
     while (fscanf(file, "%s %d:%d %d:%d %[^\n]", entry.date, &entry.sleep_hour, &entry.sleep_minute, &entry.wake_hour, &entry.wake_minute, entry.notes) == 6) {
-        int sleep_minutes = entry.sleep_hour * 60 + entry.sleep_minute;
-        int wake_minutes = entry.wake_hour * 60 + entry.wake_minute;
-        int sleep_duration = wake_minutes - sleep_minutes;
+        // Get the weekday from the date
+        time_t t = time(NULL);
+        struct tm *tm_info = localtime(&t);
+        strptime(entry.date, "%Y-%m-%d", tm_info);
+        
+        int day_of_week = tm_info->tm_wday;  // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-        if (sleep_duration < 0) {
-            sleep_duration += 24 * 60;
+        int sleep_duration = calculate_sleep_duration(entry);
+
+        // Weekdays are Monday (1) to Friday (5), weekends are Saturday (6) and Sunday (0)
+        if (day_of_week == 0 || day_of_week == 6) {
+            weekend_sleep += sleep_duration;
+            weekend_count++;
+        } else {
+            weekday_sleep += sleep_duration;
+            weekday_count++;
         }
-
-        total_sleep_minutes += sleep_duration;
-        total_entries++;
     }
 
-    if (total_entries > 0) {
-        printf("Average sleep duration: %d hours %d minutes\n", total_sleep_minutes / total_entries / 60, total_sleep_minutes / total_entries % 60);
+    if (weekday_count > 0) {
+        printf("Average weekday sleep duration: %d hours %d minutes\n", weekday_sleep / weekday_count / 60, weekday_sleep / weekday_count % 60);
     } else {
-        printf("No sleep data available.\n");
+        printf("No weekday sleep data available.\n");
+    }
+
+    if (weekend_count > 0) {
+        printf("Average weekend sleep duration: %d hours %d minutes\n", weekend_sleep / weekend_count / 60, weekend_sleep / weekend_count % 60);
+    } else {
+        printf("No weekend sleep data available.\n");
+    }
+
+    fclose(file);
+}
+
+// Function to analyze sleep consistency
+void analyze_sleep_consistency() {
+    FILE *file = fopen("sleep_log.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file for reading.\n");
+        return;
+    }
+
+    struct SleepEntry entry;
+    int previous_sleep_minutes = -1;
+    int consistent_days = 0, total_days = 0;
+
+    while (fscanf(file, "%s %d:%d %d:%d %[^\n]", entry.date, &entry.sleep_hour, &entry.sleep_minute, &entry.wake_hour, &entry.wake_minute, entry.notes) == 6) {
+        int sleep_duration = calculate_sleep_duration(entry);
+
+        if (previous_sleep_minutes != -1) {
+            // Compare sleep duration consistency with the previous day
+            if (abs(sleep_duration - previous_sleep_minutes) <= 30) {  // within 30 minutes for consistency
+                consistent_days++;
+            }
+        }
+
+        previous_sleep_minutes = sleep_duration;
+        total_days++;
+    }
+
+    if (total_days > 0) {
+        printf("Sleep consistency: %.2f%%\n", (double)consistent_days / total_days * 100);
+    } else {
+        printf("No sleep data available to analyze consistency.\n");
     }
 
     fclose(file);
@@ -90,11 +139,9 @@ int main() {
     // Log the data
     log_sleep_data(entry);
 
-    // Calculate and display sleep duration
-    calculate_sleep_duration(entry);
-
-    // Optionally, calculate the average sleep duration
-    calculate_average_sleep_duration();
+    // Analyze trends and consistency
+    analyze_sleep_trends();
+    analyze_sleep_consistency();
 
     return 0;
 }
