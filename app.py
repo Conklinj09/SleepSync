@@ -18,7 +18,9 @@ def log_sleep():
     print(f"Notes: {notes}")
 
     # Respond back to Tkinter with success
-    return jsonify({"status": "success", "message": "Data logged successfully!"}), 200
+    response = jsonify({"status": "success", "message": "Data logged successfully!"})
+    response.status_code = 200  # HTTP success status code
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)
