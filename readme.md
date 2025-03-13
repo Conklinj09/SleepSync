@@ -26,3 +26,20 @@ To run **SleepSync**, follow these steps:
 3. Run the **Flask backend**:
    ```bash
    python3 app.py
+
+# Run the Tkinter frontend:
+bash
+Copy
+python3 frontend.py
+
+
+## 🌙 Technologies Used 🌙
+Tkinter: For the beautiful GUI.
+Flask: For handling data in the backend.
+Random: For creating the twinkling stars effect. 🌟
+CSS Styling: Simulated rounded corners, magical font, and galaxy theme! ✨
+
+## 💬 Contributing 💬
+Jeanette Conklin
+We'd love for you to contribute! Feel free to fork this repository and make any improvements or suggestions.
+Pull requests are welcome! 🚀
