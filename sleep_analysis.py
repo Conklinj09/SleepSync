@@ -1,3 +1,25 @@
+# sleep_analysis.py
+
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+def load_sleep_data(filepath="sleep_log.csv"):
+    # ...
+
+def calculate_average_sleep(df):
+    # ...
+
+def detect_inconsistencies(df):
+    # ...
+
+def generate_regression(df):
+    # ...
+
+def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
+    # ...
+
+
 from styling import GRAPH_LINE_COLOR
 
 plt.plot(df["Date"], y_pred, color=GRAPH_LINE_COLOR, label="Trend Line")
