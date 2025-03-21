@@ -77,8 +77,59 @@ def update_dashboard():
 def export_report():
     print("📤 Export Weekly Report feature coming soon!")
 
+
+
+# add sleep entry drop down
 def add_entry():
-    print("📝 Add Sleep Entry feature coming soon!")
+    # Pop-up window
+    entry_win = tk.Toplevel(root)
+    entry_win.title("Add Sleep Entry")
+    entry_win.geometry("400x400")
+    entry_win.configure(bg=BACKGROUND_COLOR)
+
+    # Labels + Inputs
+    tk.Label(entry_win, text="Date (YYYY-MM-DD):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+    date_entry = tk.Entry(entry_win)
+    date_entry.insert(0, datetime.now().strftime('%Y-%m-%d'))
+    date_entry.pack()
+
+    tk.Label(entry_win, text="Sleep Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+    sleep_time_entry = tk.Entry(entry_win)
+    sleep_time_entry.pack()
+
+    tk.Label(entry_win, text="Wake Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+    wake_time_entry = tk.Entry(entry_win)
+    wake_time_entry.pack()
+
+    # Sleep Quality Dropdown
+    tk.Label(entry_win, text="Sleep Quality:", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+    quality_var = tk.StringVar()
+    sleep_quality_dropdown = ttk.Combobox(entry_win, textvariable=quality_var, state="readonly",
+                                          values=["😴 Excellent", "🙂 Good", "😐 Average", "😕 Poor", "😫 Very Poor"])
+    sleep_quality_dropdown.current(2)  # Default to "Average"
+    sleep_quality_dropdown.pack()
+
+    # Submit button
+    def submit_entry():
+        date = date_entry.get()
+        sleep_time = sleep_time_entry.get()
+        wake_time = wake_time_entry.get()
+        quality = quality_var.get()
+
+        try:
+            # Convert to datetime objects
+            sleep_dt = datetime.strptime(f"{date} {sleep_time}", "%Y-%m-%d %H:%M")
+            wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
+            if wake_dt <= sleep_dt:
+                wake_dt += timedelta(days=1)
+
+            # Calculate hours
+            hours_slept = round((wake_dt - sleep_dt).total_seconds() / 3600, 2)
+
+            # Append to CSV
+            with open("sleep_log.csv", "a", newline="") as f:
+                writer =
+
     
     
 from datetime import datetime, timedelta
