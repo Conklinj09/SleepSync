@@ -1,45 +1,121 @@
-# 🌟 **SleepSync - Galaxy Themed Sleep Tracker** 🌟
+# 🌙 SleepSync 🐸  
+**Track your sleep, spot trends, and sync with your natural rhythm.**  
+A cozy sleep tracking application built in C, Python, and Tkinter with beautiful graphing and mindful wellness insights.
 
-Welcome to **SleepSync**, a magical, galaxy-themed sleep tracker where you can log your sleep data and see the stars twinkle as you track your wellness! 🌌
+---
 
-### ✨ **Features** ✨
-- **Track Sleep Time** 🛏️
-- **Track Wake Time** ⏰
-- **Notes Section** 📝
-- **Twinkling Stars** 🌠
-- **Galaxy Background** 🌌
-- **Magical Theme** 🌟
+## ✨ Features
 
-### 🌟 **How to Use SleepSync** 🌟
+### ✅ Core Functionality:
+- ⌨️ **C-based Logging System**  
+  Logs your sleep data including sleep/wake time and saves it to `sleep_log.csv`.
 
-1. **Enter your sleep and wake times** ⏳
-2. **Write any notes** ✨ (e.g., "Felt rested," "Had trouble sleeping")
-3. **Submit the data** 🚀
-4. Watch the **twinkling stars** 🌠 and enjoy your journey through the galaxy as you track your sleep patterns! 🌙
+- 📈 **Sleep Data Analysis with Linear Regression**  
+  Python calculates your sleep trends over time and visualizes them with a best-fit line.
 
-### 🔧 **Installation Instructions** 🔧
+- 🖼️ **Graph with Color-Coded Sleep Quality**  
+  Each night's sleep is represented with a color-coded dot based on how well you slept:
+  - 😴 Excellent → Green
+  - 🙂 Good → Blue
+  - 😐 Average → Gold
+  - 😕 Poor → Salmon
+  - 😫 Very Poor → Red
 
-To run **SleepSync**, follow these steps:
+- 📊 **Tkinter Dashboard (GUI)**  
+  An intuitive, cozy dashboard shows:
+  - Average sleep duration
+  - Inconsistent sleep nights (outliers)
+  - A scatterplot of your sleep over time
+  - Easy-to-use buttons to trigger features
 
-1. Install the required packages (Tkinter, requests, etc.) if not already installed.
-2. Clone this repository or download the project files.
-3. Run the **Flask backend**:
-   ```bash
-   python3 app.py
+- 📝 **Add New Sleep Entry Popup**  
+  Log new entries with:
+  - Date
+  - Sleep Time
+  - Wake Time
+  - Sleep Quality (via dropdown menu)  
+  The system auto-calculates total sleep duration and appends it to your CSV file.
 
-# Run the Tkinter frontend:
+- 📤 **Generate Weekly PDF Report**  
+  Create a downloadable PDF showing:
+  - Weekly date range
+Create a downloadable PDF showing:
+  - Weekly date range
+  - Average sleep hours
+  - Sleep quality breakdown
+  - Your color-coded graph
+  - A soft affirmation to keep you motivated 🌟
+
+---
+
+## 🗂 File Structure
+SleepSync/ ├── sleep_log.csv # Your sleep data file ├── sleep_analysis.py # Analyzes data + generates graph ├── gui.py # Main Tkinter dashboard ├── generate_report.py # PDF report generator ├── styling.py # Color themes and aesthetic constants └── sleep_graph.png # Generated graph image
+
+
+---
+
+## 🚀 How to Run
+
+### 📌 Prerequisites:
+Install the required Python packages:
+
+```bash
+pip install pandas matplotlib scikit-learn pillow reportlab
+
+
+# 🧪 Run the GUI:
 bash
 Copy
-python3 frontend.py
+Edit
+python gui.py
+
+Click buttons in the interface to:
+
+Add new sleep logs
+View updated insights
+Export your weekly PDF report
 
 
-## 🌙 Technologies Used 🌙
-Tkinter: For the beautiful GUI.
-Flask: For handling data in the backend.
-Random: For creating the twinkling stars effect. 🌟
-CSS Styling: Simulated rounded corners, magical font, and galaxy theme! ✨
+# 🌌 Sleep Quality Legend
+Emoji	Meaning	Graph Color
+😴 Excellent	Best quality	Green
+🙂 Good	Restful sleep	Blue
+😐 Average	Neutral	Gold
+😕 Poor	Restless	Salmon
+😫 Very Poor	Low quality	Red
 
-## 💬 Contributing 💬
+# 💖 Created By
 Jeanette Conklin
-We'd love for you to contribute! Feel free to fork this repository and make any improvements or suggestions.
-Pull requests are welcome! 🚀
+SleepSync is part of a passion project to merge wellness + coding ✨
+
+# 🛠️ License
+This project is licensed under the GNU GPLv3 License.
+
+# 🤝 Contributions
+Contributions are welcome! Just be gentle and keep it dreamy. 🌙
+
+yaml
+Copy
+Edit
+
+---
+
+![Python](https://img.shields.io/badge/python-3.10-blue)
+
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
+
+![Sleepy Vibes](https://img.shields.io/badge/vibe-cozy%20dreams-ff69b4)
+
+![Built with Love](https://img.shields.io/badge/built%20with-love-%23ff69b4)
+
+![GUI: Tkinter](https://img.shields.io/badge/GUI-Tkinter-blueviolet)
+
+![PDF Reports](https://img.shields.io/badge/feature-PDF%20Reports-informational)
+
+
+
+
+
+
+
+
