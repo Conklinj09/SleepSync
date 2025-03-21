@@ -12,3 +12,8 @@ def load_sleep_data(filepath="sleep_log.csv"):
     df["Date"] = pd.to_datetime(df["Date"])
     df["DateOrdinal"] = df["Date"].map(pd.Timestamp.toordinal)
     return df
+
+# Calculate Averages
+
+def calculate_average_sleep(df):
+    return df["SleepHours"].mean()
