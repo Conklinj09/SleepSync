@@ -26,3 +26,17 @@ def detect_inconsistencies(df):
     outliers = df[(df["SleepHours"] - df["SleepHours"].mean()).abs() > threshold]
     return outliers
 
+
+# Generate Regression Model
+# Fit a linear regression model to the data
+# Predict sleep hours based on date
+from sklearn.linear_model import LinearRegression
+def generate_regression(df):
+    X = df["DateOrdinal"].values.reshape(-1, 1)
+    y = df["SleepHours"].values
+    model = LinearRegression()
+    model.fit(X, y)
+    y_pred = model.predict(X)
+    return model, y_pred
+
+
