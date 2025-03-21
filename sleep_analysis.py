@@ -1,4 +1,12 @@
-# sleep_analysis.py
+# Add this near the top of sleep_analysis.py
+QUALITY_COLOR_MAP = {
+    "😴 Excellent": "#90EE90",  # Light green
+    "🙂 Good": "#ADD8E6",       # Light blue
+    "😐 Average": "#FFD700",    # Gold
+    "😕 Poor": "#FFA07A",       # Light salmon
+    "😫 Very Poor": "#FF6347"   # Tomato red
+}
+
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
@@ -22,7 +30,31 @@ def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
 
 from styling import GRAPH_LINE_COLOR
 
-plt.plot(df["Date"], y_pred, color=GRAPH_LINE_COLOR, label="Trend Line")
+
+# Plot Sleep Graph
+def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
+    plt.figure(figsize=(10, 5))
+
+    # Color-coded scatter plot based on Sleep Quality
+    for quality, color in QUALITY_COLOR_MAP.items():
+        subset = df[df["SleepQuality"] == quality]
+        if not subset.empty:
+            plt.scatter(subset["Date"], subset["SleepHours"], color=color, label=quality, alpha=0.8)
+
+    # Plot regression line
+    plt.plot(df["Date"], y_pred, color=GRAPH_LINE_COLOR, linewidth=2, label="Trend Line")
+
+    plt.title("Sleep Duration Over Time")
+    plt.xlabel("Date")
+    plt.ylabel("Hours Slept")
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
+
+
 
 
 # Load + Clean Sleep Data
@@ -30,10 +62,11 @@ plt.plot(df["Date"], y_pred, color=GRAPH_LINE_COLOR, label="Trend Line")
 # Handle missing or messy data
 # Covert dates into usdable formats
 def load_sleep_data(filepath="sleep_log.csv"):
-    df = pd.read_csv(filepath, header=None, names=["Date", "SleepHours"])
+    df = pd.read_csv(filepath, header=None, names=["Date", "SleepHours", "SleepQuality"])
     df["Date"] = pd.to_datetime(df["Date"])
     df["DateOrdinal"] = df["Date"].map(pd.Timestamp.toordinal)
     return df
+
 
 # Calculate Averages
 
