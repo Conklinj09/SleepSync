@@ -17,3 +17,12 @@ def load_sleep_data(filepath="sleep_log.csv"):
 
 def calculate_average_sleep(df):
     return df["SleepHours"].mean()
+
+
+# Detect Sleep Patterns
+def detect_inconsistencies(df):
+    std_dev = df["SleepHours"].std()
+    threshold = 1.5 * std_dev
+    outliers = df[(df["SleepHours"] - df["SleepHours"].mean()).abs() > threshold]
+    return outliers
+
