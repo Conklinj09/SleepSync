@@ -1,3 +1,14 @@
 from styling import GRAPH_LINE_COLOR
 
 plt.plot(df["Date"], y_pred, color=GRAPH_LINE_COLOR, label="Trend Line")
+
+
+# Load + Clean Sleep Data
+# Parse the CSV File or other data formats
+# Handle missing or messy data
+# Covert dates into usdable formats
+def load_sleep_data(filepath="sleep_log.csv"):
+    df = pd.read_csv(filepath, header=None, names=["Date", "SleepHours"])
+    df["Date"] = pd.to_datetime(df["Date"])
+    df["DateOrdinal"] = df["Date"].map(pd.Timestamp.toordinal)
+    return df
