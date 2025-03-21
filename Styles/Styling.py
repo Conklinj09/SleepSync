@@ -3,9 +3,10 @@ from tkinter import ttk
 import random
 
 # styling.py
-BACKGROUND_COLOR = "#0D1B2A"
-TEXT_COLOR = "#FFFFFF"
-GRAPH_LINE_COLOR = "#8A2BE2"  # purple for trend line
+BACKGROUND_COLOR = "#0D1B2A"   # Dark blue
+TEXT_COLOR = "#F5F5F5"         # Soft white
+GRAPH_LINE_COLOR = "#A288E3"   # Purple-violet
+
 
 
 # Function to create twinkling stars effect
