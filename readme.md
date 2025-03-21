@@ -4,6 +4,13 @@ A cozy sleep tracking application built in C, Python, and Tkinter with beautiful
 
 ---
 
+![Python](https://img.shields.io/badge/python-3.10-blue)
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
+![GUI: Tkinter](https://img.shields.io/badge/GUI-Tkinter-blueviolet)
+![PDF Reports](https://img.shields.io/badge/feature-PDF%20Reports-informational)
+![Sleepy Vibes](https://img.shields.io/badge/vibe-cozy%20dreams-ff69b4)
+![Made with Frog](https://img.shields.io/badge/made%20with-%F0%9F%90%B8-green)
+
 ## ✨ Features
 
 ### ✅ Core Functionality:
@@ -63,7 +70,7 @@ Install the required Python packages:
 pip install pandas matplotlib scikit-learn pillow reportlab
 
 
-# 🧪 Run the GUI:
+## 🧪 Run the GUI:
 bash
 Copy
 Edit
@@ -76,7 +83,7 @@ View updated insights
 Export your weekly PDF report
 
 
-# 🌌 Sleep Quality Legend
+## 🌌 Sleep Quality Legend
 Emoji	Meaning	Graph Color
 😴 Excellent	Best quality	Green
 🙂 Good	Restful sleep	Blue
@@ -91,7 +98,7 @@ SleepSync is part of a passion project to merge wellness + coding ✨
 # 🛠️ License
 This project is licensed under the GNU GPLv3 License.
 
-# 🤝 Contributions
+## 🤝 Contributions
 Contributions are welcome! Just be gentle and keep it dreamy. 🌙
 
 yaml
@@ -100,17 +107,7 @@ Edit
 
 ---
 
-![Python](https://img.shields.io/badge/python-3.10-blue)
 
-![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
-
-![Sleepy Vibes](https://img.shields.io/badge/vibe-cozy%20dreams-ff69b4)
-
-![Built with Love](https://img.shields.io/badge/built%20with-love-%23ff69b4)
-
-![GUI: Tkinter](https://img.shields.io/badge/GUI-Tkinter-blueviolet)
-
-![PDF Reports](https://img.shields.io/badge/feature-PDF%20Reports-informational)
 
 
 
