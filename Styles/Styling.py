@@ -2,6 +2,28 @@ import tkinter as tk
 from tkinter import ttk
 import random
 
+
+from tkinter import Tk, Label, PhotoImage
+from PIL import Image, ImageTk
+import os
+
+# Run the script that generates the graph first
+os.system("python3 sleep_graph.py")
+
+root = Tk()
+root.title("SleepSync Graph")
+
+# Load saved image
+img = Image.open("sleep_graph.png")
+img = img.resize((800, 400))
+photo = ImageTk.PhotoImage(img)
+
+label = Label(root, image=photo)
+label.pack()
+
+root.mainloop()
+
+
 # Function to create twinkling stars effect
 def create_stars(canvas, num_stars=100):
     for _ in range(num_stars):

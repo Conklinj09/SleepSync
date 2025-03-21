@@ -1,0 +1,3 @@
+FILE *fp = fopen("sleep_log.csv", "a");
+fprintf(fp, "%s,%.1f\n", date_string, sleep_hours);
+fclose(fp);
