@@ -79,3 +79,13 @@ def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
     plt.savefig(save_path)
     plt.close()
 
+# Run analysis on sleep data
+# Load, clean, analyze, and visualize the sleep data
+def run_analysis(filepath="sleep_log.csv"):
+    df = load_sleep_data(filepath)
+    avg = calculate_average_sleep(df)
+    outliers = detect_inconsistencies(df)
+    model, y_pred = generate_regression(df)
+    plot_sleep_graph(df, y_pred)
+    return avg, outliers
+
