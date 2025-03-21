@@ -40,3 +40,20 @@ def generate_regression(df):
     return model, y_pred
 
 
+# Graph Generator
+# Plot and save the graph
+# Optionally return image path or open it in a GUI
+def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
+    plt.figure(figsize=(10, 5))
+    plt.scatter(df["Date"], df["SleepHours"], color="skyblue", label="Actual Sleep")
+    plt.plot(df["Date"], y_pred, color="purple", label="Trend Line")
+    plt.title("Sleep Duration Over Time")
+    plt.xlabel("Date")
+    plt.ylabel("Hours Slept")
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
+
