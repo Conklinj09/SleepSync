@@ -3,6 +3,8 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from sleep_analysis import run_analysis
 from styling import BACKGROUND_COLOR, TEXT_COLOR
+from generate_report import generate_weekly_report
+
 
 # Create main window
 root = tk.Tk()
@@ -73,9 +75,13 @@ def update_dashboard():
                               font=("Helvetica", 12), bg="#00B894", fg="white", padx=20, pady=5)
     add_entry_btn.grid(row=0, column=2, padx=10)
 
-# Placeholder functions
+
+# Function to export the weekly report
+from generate_report import generate_weekly_report  # Make sure this is at the top
+
 def export_report():
-    print("📤 Export Weekly Report feature coming soon!")
+    generate_weekly_report()  # This will create and save the PDF report
+
 
 
 
