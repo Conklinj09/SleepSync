@@ -22,6 +22,23 @@ void log_sleep_data(struct SleepEntry entry) {
     }
 }
 
+//  Accept Sleep Quality Rating
+def log_sleep_entry(date, sleep_time, wake_time, quality_rating, filename="sleep_log.csv"):
+    from datetime import datetime
+
+    # Calculate sleep duration
+    fmt = "%H:%M"
+    sleep_dt = datetime.strptime(sleep_time, fmt)
+    wake_dt = datetime.strptime(wake_time, fmt)
+    duration = (wake_dt - sleep_dt).seconds / 3600 if wake_dt > sleep_dt else ((wake_dt - sleep_dt).seconds + 86400) / 3600
+
+    # Append data to CSV
+    with open(filename, "a") as file:
+        file.write(f"{date},{sleep_time},{wake_time},{duration:.2f},{quality_rating}\n")
+
+
+
+
 // Function to calculate total sleep time in minutes
 int calculate_sleep_duration(struct SleepEntry entry) {
     int sleep_minutes = entry.sleep_hour * 60 + entry.sleep_minute;

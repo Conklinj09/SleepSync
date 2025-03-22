@@ -1,3 +1,8 @@
 FILE *fp = fopen("sleep_log.csv", "a");
 fprintf(fp, "%s,%.1f\n", date_string, sleep_hours);
 fclose(fp);
+
+// handler for sleep quality rating
+with open(filename, "a") as file:
+    if os.stat(filename).st_size == 0:
+        file.write("Date,Sleep Time,Wake Time,Duration,Quality Rating\n")

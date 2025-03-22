@@ -26,6 +26,40 @@ def generate_regression(df):
 
 def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
     # ...
+    
+    
+ // Sleep quality rating 
+ // Find Correlation between sleep duration and quality   
+def analyze_sleep_data(filename="sleep_log.csv"):
+    df = pd.read_csv(filename)
+
+    avg_duration = df["Duration"].mean()
+    avg_quality = df["Quality Rating"].mean()
+
+    print(f"Average Sleep Duration: {avg_duration:.2f} hrs")
+    print(f"Average Sleep Quality: {avg_quality:.2f} / 5")
+
+    # Correlation between duration and quality
+    correlation = df["Duration"].corr(df["Quality Rating"])
+    print(f"Correlation between sleep duration and quality: {correlation:.2f}")
+
+    return df
+
+
+
+// Adding Sleep Quality Graph
+import matplotlib.pyplot as plt
+
+def plot_sleep_vs_quality(df):
+    plt.scatter(df["Duration"], df["Quality Rating"])
+    plt.title("Sleep Duration vs Quality")
+    plt.xlabel("Duration (hrs)")
+    plt.ylabel("Quality Rating (1–5)")
+    plt.grid(True)
+    plt.show()
+
+    
+    
 
 
 from styling import GRAPH_LINE_COLOR
