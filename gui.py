@@ -19,9 +19,34 @@ canvas = Canvas(root, width=bg_image.width, height=bg_image.height)
 canvas.pack(fill="both", expand=True)
 canvas.create_image(0, 0, image=bg_photo, anchor="nw")
 
-# Add your widgets here on top of the background
+# Star storage
+        self.stars = []
+        self.max_stars = 50
+        self.animate_stars()
 
-root.mainloop()
+    def animate_stars(self):
+        # Clear old stars
+        for star in self.stars:
+            self.canvas.delete(star)
+        self.stars.clear()
+
+        # Draw new stars at random positions with random twinkle sizes
+        for _ in range(self.max_stars):
+            x = random.randint(0, self.bg_image.width)
+            y = random.randint(0, self.bg_image.height)
+            size = random.randint(1, 3)
+            color = random.choice(["white", "light yellow", "light gray"])
+            star = self.canvas.create_oval(x, y, x + size, y + size, fill=color, outline=color)
+            self.stars.append(star)
+
+        # Repeat every 500 milliseconds to simulate twinkling
+        self.root.after(500, self.animate_stars)
+
+# Run the app
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = SleepSyncApp(root)
+    root.mainloop()
 
 
 
