@@ -3,9 +3,12 @@ from tkinter import ttk
 import random
 
 # styling.py
-BACKGROUND_COLOR = "#0D1B2A"   # Dark blue
-TEXT_COLOR = "#F5F5F5"         # Soft white
-GRAPH_LINE_COLOR = "#A288E3"   # Purple-violet
+BACKGROUND_COLOR = "#0A0A23"  # Deep space blue
+TEXT_COLOR = "#FFFFFF"        # Bright white
+BUTTON_PRIMARY = "#7B61FF"    # Dreamy purple
+BUTTON_SECONDARY = "#00B894"  # Calming teal
+BUTTON_ACCENT = "#4A90E2"     # Soothing blue
+ENTRY_BG = "#1C1C3A"          # Soft dark entry boxes
 
 
 
