@@ -1,42 +1,41 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+import random
 from sleep_analysis import run_analysis
 from styling import BACKGROUND_COLOR, TEXT_COLOR
 from generate_report import generate_weekly_report
-from tkinter import *
-from PIL import Image, ImageTk
+from datetime import datetime, timedelta
+import csv
 
-root = Tk()
-root.title("SleepSync")
 class SleepSyncApp:
     def __init__(self, root):
-        # Your GUI setup
-        
+        self.root = root
+        self.root.title("SleepSync Dashboard 🌙")
+        self.root.geometry("900x700")
+        self.root.configure(bg=BACKGROUND_COLOR)
 
+        # Load and place background image
+        self.bg_image = Image.open("starry_bg.png")
+        self.bg_photo = ImageTk.PhotoImage(self.bg_image)
 
-# Load background image
-bg_image = Image.open("starry_bg.png")
-bg_photo = ImageTk.PhotoImage(bg_image)
+        self.canvas = tk.Canvas(self.root, width=self.bg_image.width, height=self.bg_image.height)
+        self.canvas.pack(fill="both", expand=True)
+        self.canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
 
-# Create canvas and set image
-canvas = Canvas(root, width=bg_image.width, height=bg_image.height)
-canvas.pack(fill="both", expand=True)
-canvas.create_image(0, 0, image=bg_photo, anchor="nw")
-
-#Animate stars
-# Star storage
         self.stars = []
         self.max_stars = 50
         self.animate_stars()
+        self.launch_shooting_star()
+
+        self.graph_photo = None
+        self.update_dashboard()
 
     def animate_stars(self):
-        # Clear old stars
         for star in self.stars:
             self.canvas.delete(star)
         self.stars.clear()
 
-        # Draw new stars at random positions with random twinkle sizes
         for _ in range(self.max_stars):
             x = random.randint(0, self.bg_image.width)
             y = random.randint(0, self.bg_image.height)
@@ -45,25 +44,14 @@ canvas.create_image(0, 0, image=bg_photo, anchor="nw")
             star = self.canvas.create_oval(x, y, x + size, y + size, fill=color, outline=color)
             self.stars.append(star)
 
-        # Repeat every 500 milliseconds to simulate twinkling
         self.root.after(500, self.animate_stars)
 
-# Run the app
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = SleepSyncApp(root)
-    root.mainloop()
-    
-#Shooting Star Animation
     def launch_shooting_star(self):
-        # Random start position from top or top-left
         x_start = random.randint(-100, self.bg_image.width // 2)
         y_start = random.randint(0, self.bg_image.height // 3)
 
-        # Comet shape and trail
         comet = self.canvas.create_oval(x_start, y_start, x_start + 4, y_start + 4, fill="white", outline="white")
-        
-        # Move it diagonally across the screen
+
         def move_comet(x, y, comet_id):
             if x < self.bg_image.width and y < self.bg_image.height:
                 self.canvas.move(comet_id, 5, 3)
@@ -72,219 +60,120 @@ if __name__ == "__main__":
                 self.canvas.delete(comet_id)
 
         move_comet(x_start, y_start, comet)
-
-        # Randomize how often a shooting star appears
         next_star_delay = random.randint(4000, 10000)
         self.root.after(next_star_delay, self.launch_shooting_star)
 
-# Run the app
-self.launch_shooting_star()
+    def update_dashboard(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
 
+        self.canvas = tk.Canvas(self.root, width=self.bg_image.width, height=self.bg_image.height)
+        self.canvas.pack(fill="both", expand=True)
+        self.canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
 
+        avg, outliers = run_analysis()
 
+        title = tk.Label(self.root, text="✨ SleepSync Summary ✨", font=("Helvetica", 24, "bold"), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
+        title.place(x=250, y=20)
 
+        avg_label = tk.Label(self.root, text=f"Average Sleep Duration: {avg:.2f} hours", font=("Helvetica", 16), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
+        avg_label.place(x=280, y=80)
 
+        outlier_label = tk.Label(self.root, text="Inconsistent Sleep Days:", font=("Helvetica", 14, "bold"), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
+        outlier_label.place(x=320, y=130)
 
+        outlier_box = tk.Text(self.root, height=5, width=60, bg=BACKGROUND_COLOR, fg=TEXT_COLOR, font=("Helvetica", 12), borderwidth=0)
+        outlier_box.place(x=120, y=170)
 
-# Create main window
-root = tk.Tk()
-root.title("SleepSync Dashboard 🌙")
-root.geometry("900x700")
-root.configure(bg=BACKGROUND_COLOR)
+        if outliers.empty:
+            outlier_box.insert(tk.END, "No major inconsistencies detected ✨")
+        else:
+            for index, row in outliers.iterrows():
+                outlier_box.insert(tk.END, f"{row['Date'].strftime('%Y-%m-%d')} - {row['SleepHours']} hrs\n")
+        outlier_box.config(state='disabled')
 
+        graph_img = Image.open("sleep_graph.png").resize((800, 300))
+        self.graph_photo = ImageTk.PhotoImage(graph_img)
+        graph_label = tk.Label(self.root, image=self.graph_photo, bg=BACKGROUND_COLOR)
+        graph_label.image = self.graph_photo
+        graph_label.place(x=50, y=300)
 
+        button_frame = tk.Frame(self.root, bg=BACKGROUND_COLOR)
+        button_frame.place(x=250, y=620)
 
+        rerun_btn = tk.Button(button_frame, text="🔁 Re-run Analysis", command=self.update_dashboard,
+                              font=("Helvetica", 12), bg="#4A90E2", fg="white", padx=20, pady=5)
+        rerun_btn.grid(row=0, column=0, padx=10)
 
-# Keep a reference to the image so it's not garbage collected
-graph_photo = None
+        export_btn = tk.Button(button_frame, text="📤 Export Weekly Report", command=self.export_report,
+                               font=("Helvetica", 12), bg="#7B61FF", fg="white", padx=20, pady=5)
+        export_btn.grid(row=0, column=1, padx=10)
 
-# Function to update content
-def update_dashboard():
-    global graph_photo  # So image isn't garbage collected
-    
-    # Clear previous widgets
-    for widget in root.winfo_children():
-        widget.destroy()
-    
-    # Run analysis
-    avg, outliers = run_analysis()
-    
-    # Title
-    title = tk.Label(root, text="✨ SleepSync Summary ✨", font=("Helvetica", 24, "bold"), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-    title.pack(pady=20)
+        add_entry_btn = tk.Button(button_frame, text="📝 Add Sleep Entry", command=self.add_entry,
+                                  font=("Helvetica", 12), bg="#00B894", fg="white", padx=20, pady=5)
+        add_entry_btn.grid(row=0, column=2, padx=10)
 
-    # Average sleep label
-    avg_label = tk.Label(root, text=f"Average Sleep Duration: {avg:.2f} hours", font=("Helvetica", 16), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-    avg_label.pack()
+    def export_report(self):
+        generate_weekly_report()
 
-    # Outlier section
-    outlier_label = tk.Label(root, text="Inconsistent Sleep Days:", font=("Helvetica", 14, "bold"), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-    outlier_label.pack(pady=(20, 5))
+    def add_entry(self):
+        entry_win = tk.Toplevel(self.root)
+        entry_win.title("Add Sleep Entry")
+        entry_win.geometry("400x400")
+        entry_win.configure(bg=BACKGROUND_COLOR)
 
-    outlier_box = tk.Text(root, height=5, width=60, bg=BACKGROUND_COLOR, fg=TEXT_COLOR, font=("Helvetica", 12), borderwidth=0)
-    outlier_box.pack()
+        tk.Label(entry_win, text="Date (YYYY-MM-DD):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+        date_entry = tk.Entry(entry_win)
+        date_entry.insert(0, datetime.now().strftime('%Y-%m-%d'))
+        date_entry.pack()
 
-    if outliers.empty:
-        outlier_box.insert(tk.END, "No major inconsistencies detected 🌈")
-    else:
-        for index, row in outliers.iterrows():
-            outlier_box.insert(tk.END, f"{row['Date'].strftime('%Y-%m-%d')} - {row['SleepHours']} hrs\n")
-    outlier_box.config(state='disabled')
+        tk.Label(entry_win, text="Sleep Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+        sleep_time_entry = tk.Entry(entry_win)
+        sleep_time_entry.pack()
 
-    # Graph image
-    graph_img = Image.open("sleep_graph.png")
-    graph_img = graph_img.resize((800, 300))
-    graph_photo = ImageTk.PhotoImage(graph_img)
-    graph_label = tk.Label(root, image=graph_photo, bg=BACKGROUND_COLOR)
-    graph_label.image = graph_photo  # Keep reference
-    graph_label.pack(pady=20)
+        tk.Label(entry_win, text="Wake Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+        wake_time_entry = tk.Entry(entry_win)
+        wake_time_entry.pack()
 
-    # Button Frame
-    button_frame = tk.Frame(root, bg=BACKGROUND_COLOR)
-    button_frame.pack(pady=10)
+        tk.Label(entry_win, text="Sleep Quality:", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
+        quality_var = tk.StringVar()
+        sleep_quality_dropdown = ttk.Combobox(entry_win, textvariable=quality_var, state="readonly",
+                                              values=["🛌 Excellent", "🙂 Good", "😐 Average", "😕 Poor", "😫 Very Poor"])
+        sleep_quality_dropdown.current(2)
+        sleep_quality_dropdown.pack()
 
-    # 🔁 Re-run Analysis Button
-    rerun_btn = tk.Button(button_frame, text="🔁 Re-run Analysis", command=update_dashboard,
-                          font=("Helvetica", 12), bg="#4A90E2", fg="white", padx=20, pady=5)
-    rerun_btn.grid(row=0, column=0, padx=10)
+        def submit_entry():
+            date = date_entry.get()
+            sleep_time = sleep_time_entry.get()
+            wake_time = wake_time_entry.get()
+            quality = quality_var.get()
 
-    # 📤 Export Report Button (placeholder)
-    export_btn = tk.Button(button_frame, text="📤 Export Weekly Report", command=export_report,
-                           font=("Helvetica", 12), bg="#7B61FF", fg="white", padx=20, pady=5)
-    export_btn.grid(row=0, column=1, padx=10)
+            try:
+                sleep_dt = datetime.strptime(f"{date} {sleep_time}", "%Y-%m-%d %H:%M")
+                wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
+                if wake_dt <= sleep_dt:
+                    wake_dt += timedelta(days=1)
 
-    # 📝 Add Sleep Entry Button (placeholder)
-    add_entry_btn = tk.Button(button_frame, text="📝 Add Sleep Entry", command=add_entry,
-                              font=("Helvetica", 12), bg="#00B894", fg="white", padx=20, pady=5)
-    add_entry_btn.grid(row=0, column=2, padx=10)
+                hours_slept = round((wake_dt - sleep_dt).total_seconds() / 3600, 2)
 
+                with open("sleep_log.csv", "a", newline="") as f:
+                    writer = csv.writer(f)
+                    writer.writerow([date, hours_slept, quality])
 
-# Function to export the weekly report
-from generate_report import generate_weekly_report  # Make sure this is at the top
+                print(f"📝 Logged {hours_slept} hours on {date}")
+                entry_win.destroy()
+                self.update_dashboard()
 
-def export_report():
-    generate_weekly_report()  # This will create and save the PDF report
+            except Exception as e:
+                error_label.config(text=f"Error: {str(e)}")
 
+        submit_btn = tk.Button(entry_win, text="Submit", command=submit_entry, bg="#00B894", fg="white")
+        submit_btn.pack(pady=10)
 
+        error_label = tk.Label(entry_win, text="", fg="red", bg=BACKGROUND_COLOR)
+        error_label.pack()
 
-
-# add sleep entry drop down
-def add_entry():
-    # Pop-up window
-    entry_win = tk.Toplevel(root)
-    entry_win.title("Add Sleep Entry")
-    entry_win.geometry("400x400")
-    entry_win.configure(bg=BACKGROUND_COLOR)
-
-    # Labels + Inputs
-    tk.Label(entry_win, text="Date (YYYY-MM-DD):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    date_entry = tk.Entry(entry_win)
-    date_entry.insert(0, datetime.now().strftime('%Y-%m-%d'))
-    date_entry.pack()
-
-    tk.Label(entry_win, text="Sleep Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    sleep_time_entry = tk.Entry(entry_win)
-    sleep_time_entry.pack()
-
-    tk.Label(entry_win, text="Wake Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    wake_time_entry = tk.Entry(entry_win)
-    wake_time_entry.pack()
-
-    # Sleep Quality Dropdown
-    tk.Label(entry_win, text="Sleep Quality:", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    quality_var = tk.StringVar()
-    sleep_quality_dropdown = ttk.Combobox(entry_win, textvariable=quality_var, state="readonly",
-                                          values=["😴 Excellent", "🙂 Good", "😐 Average", "😕 Poor", "😫 Very Poor"])
-    sleep_quality_dropdown.current(2)  # Default to "Average"
-    sleep_quality_dropdown.pack()
-
-    # Submit button
-    def submit_entry():
-        date = date_entry.get()
-        sleep_time = sleep_time_entry.get()
-        wake_time = wake_time_entry.get()
-        quality = quality_var.get()
-
-        try:
-            # Convert to datetime objects
-            sleep_dt = datetime.strptime(f"{date} {sleep_time}", "%Y-%m-%d %H:%M")
-            wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
-            if wake_dt <= sleep_dt:
-                wake_dt += timedelta(days=1)
-
-            # Calculate hours
-            hours_slept = round((wake_dt - sleep_dt).total_seconds() / 3600, 2)
-
-            # Append to CSV
-            with open("sleep_log.csv", "a", newline="") as f:
-                writer =
-
-    
-    
-from datetime import datetime, timedelta
-import csv
-
-def add_entry():
-    # Pop-up window
-    entry_win = tk.Toplevel(root)
-    entry_win.title("Add Sleep Entry")
-    entry_win.geometry("400x300")
-    entry_win.configure(bg=BACKGROUND_COLOR)
-
-    # Labels + Entries
-    tk.Label(entry_win, text="Date (YYYY-MM-DD):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    date_entry = tk.Entry(entry_win)
-    date_entry.insert(0, datetime.now().strftime('%Y-%m-%d'))
-    date_entry.pack()
-
-    tk.Label(entry_win, text="Sleep Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    sleep_time_entry = tk.Entry(entry_win)
-    sleep_time_entry.pack()
-
-    tk.Label(entry_win, text="Wake Time (HH:MM 24hr):", fg=TEXT_COLOR, bg=BACKGROUND_COLOR).pack(pady=5)
-    wake_time_entry = tk.Entry(entry_win)
-    wake_time_entry.pack()
-
-    # Submit button
-    def submit_entry():
-        date = date_entry.get()
-        sleep_time = sleep_time_entry.get()
-        wake_time = wake_time_entry.get()
-
-        try:
-            # Convert times to datetime
-            sleep_dt = datetime.strptime(f"{date} {sleep_time}", "%Y-%m-%d %H:%M")
-            wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
-
-            # If wake time is earlier than sleep, assume next day
-            if wake_dt <= sleep_dt:
-                wake_dt += timedelta(days=1)
-
-            # Calculate hours slept
-            hours_slept = round((wake_dt - sleep_dt).total_seconds() / 3600, 2)
-
-            # Append to CSV
-            with open("sleep_log.csv", "a", newline="") as f:
-                writer = csv.writer(f)
-                writer.writerow([date, hours_slept])
-
-            print(f"📝 Logged {hours_slept} hours on {date}")
-            entry_win.destroy()
-            update_dashboard()  # Optional: refresh UI
-
-        except Exception as e:
-            error_label.config(text=f"Error: {str(e)}")
-
-    submit_btn = tk.Button(entry_win, text="Submit", command=submit_entry, bg="#00B894", fg="white")
-    submit_btn.pack(pady=10)
-
-    error_label = tk.Label(entry_win, text="", fg="red", bg=BACKGROUND_COLOR)
-    error_label.pack()
-
-    
-
-# Run the dashboard initially
-update_dashboard()
-
-# Run app
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = SleepSyncApp(root)
+    root.mainloop()
