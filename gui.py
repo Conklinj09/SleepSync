@@ -9,6 +9,11 @@ from PIL import Image, ImageTk
 
 root = Tk()
 root.title("SleepSync")
+class SleepSyncApp:
+    def __init__(self, root):
+        # Your GUI setup
+        
+
 
 # Load background image
 bg_image = Image.open("starry_bg.png")
@@ -19,6 +24,7 @@ canvas = Canvas(root, width=bg_image.width, height=bg_image.height)
 canvas.pack(fill="both", expand=True)
 canvas.create_image(0, 0, image=bg_photo, anchor="nw")
 
+#Animate stars
 # Star storage
         self.stars = []
         self.max_stars = 50
@@ -47,7 +53,32 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = SleepSyncApp(root)
     root.mainloop()
+    
+#Shooting Star Animation
+    def launch_shooting_star(self):
+        # Random start position from top or top-left
+        x_start = random.randint(-100, self.bg_image.width // 2)
+        y_start = random.randint(0, self.bg_image.height // 3)
 
+        # Comet shape and trail
+        comet = self.canvas.create_oval(x_start, y_start, x_start + 4, y_start + 4, fill="white", outline="white")
+        
+        # Move it diagonally across the screen
+        def move_comet(x, y, comet_id):
+            if x < self.bg_image.width and y < self.bg_image.height:
+                self.canvas.move(comet_id, 5, 3)
+                self.root.after(30, lambda: move_comet(x + 5, y + 3, comet_id))
+            else:
+                self.canvas.delete(comet_id)
+
+        move_comet(x_start, y_start, comet)
+
+        # Randomize how often a shooting star appears
+        next_star_delay = random.randint(4000, 10000)
+        self.root.after(next_star_delay, self.launch_shooting_star)
+
+# Run the app
+self.launch_shooting_star()
 
 
 
