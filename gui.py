@@ -178,3 +178,28 @@ if __name__ == "__main__":
     app = SleepSyncApp(root)
     update_dashboard() # Initial update
     root.mainloop()
+
+
+// Adding drop down for sleep quality
+
+from tkinter import StringVar, Label, OptionMenu
+
+quality_var = StringVar()
+quality_var.set("3")  # Default value
+
+Label(root, text="Sleep Quality (1-5):").pack()
+OptionMenu(root, quality_var, "1", "2", "3", "4", "5").pack()
+
+
+
+
+// Update Submit Button Handler
+def submit_sleep_data():
+    date = date_entry.get()
+    sleep_time = sleep_time_entry.get()
+    wake_time = wake_time_entry.get()
+    quality_rating = int(quality_var.get())
+
+    log_sleep_entry(date, sleep_time, wake_time, quality_rating)
+    messagebox.showinfo("Success", "Sleep entry recorded!")
+
