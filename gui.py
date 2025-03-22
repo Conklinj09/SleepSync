@@ -4,6 +4,30 @@ from PIL import Image, ImageTk
 from sleep_analysis import run_analysis
 from styling import BACKGROUND_COLOR, TEXT_COLOR
 from generate_report import generate_weekly_report
+from tkinter import *
+from PIL import Image, ImageTk
+
+root = Tk()
+root.title("SleepSync")
+
+# Load background image
+bg_image = Image.open("starry_bg.png")
+bg_photo = ImageTk.PhotoImage(bg_image)
+
+# Create canvas and set image
+canvas = Canvas(root, width=bg_image.width, height=bg_image.height)
+canvas.pack(fill="both", expand=True)
+canvas.create_image(0, 0, image=bg_photo, anchor="nw")
+
+# Add your widgets here on top of the background
+
+root.mainloop()
+
+
+
+
+
+
 
 
 # Create main window
@@ -11,6 +35,9 @@ root = tk.Tk()
 root.title("SleepSync Dashboard 🌙")
 root.geometry("900x700")
 root.configure(bg=BACKGROUND_COLOR)
+
+
+
 
 # Keep a reference to the image so it's not garbage collected
 graph_photo = None
