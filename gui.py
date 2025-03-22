@@ -176,4 +176,5 @@ class SleepSyncApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = SleepSyncApp(root)
+    update_dashboard() # Initial update
     root.mainloop()
