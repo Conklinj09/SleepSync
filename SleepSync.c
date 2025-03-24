@@ -26,13 +26,13 @@ void log_sleep_data(struct SleepEntry entry) {
 def log_sleep_entry(date, sleep_time, wake_time, quality_rating, filename="sleep_log.csv"):
     from datetime import datetime
 
-    # Calculate sleep duration
+    // Calculate sleep duration
     fmt = "%H:%M"
     sleep_dt = datetime.strptime(sleep_time, fmt)
     wake_dt = datetime.strptime(wake_time, fmt)
     duration = (wake_dt - sleep_dt).seconds / 3600 if wake_dt > sleep_dt else ((wake_dt - sleep_dt).seconds + 86400) / 3600
 
-    # Append data to CSV
+    // Append data to CSV
     with open(filename, "a") as file:
         file.write(f"{date},{sleep_time},{wake_time},{duration:.2f},{quality_rating}\n")
 
