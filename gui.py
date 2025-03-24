@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-import random
 from sleep_analysis import run_analysis
 from styling import BACKGROUND_COLOR, TEXT_COLOR
 from generate_report import generate_weekly_report
