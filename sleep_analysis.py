@@ -28,8 +28,8 @@ def plot_sleep_graph(df, y_pred, save_path="sleep_graph.png"):
     # ...
     
     
- // Sleep quality rating 
- // Find Correlation between sleep duration and quality   
+# Sleep quality rating 
+# Find Correlation between sleep duration and quality   
 def analyze_sleep_data(filename="sleep_log.csv"):
     df = pd.read_csv(filename)
 
@@ -47,7 +47,7 @@ def analyze_sleep_data(filename="sleep_log.csv"):
 
 
 
-// Adding Sleep Quality Graph
+# Adding Sleep Quality Graph
 import matplotlib.pyplot as plt
 
 def plot_sleep_vs_quality(df):

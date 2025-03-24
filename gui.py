@@ -179,9 +179,7 @@ if __name__ == "__main__":
     update_dashboard() # Initial update
     root.mainloop()
 
-
-// Adding drop down for sleep quality
-
+# Adding drop down for sleep quality
 from tkinter import StringVar, Label, OptionMenu
 
 quality_var = StringVar()
@@ -193,7 +191,7 @@ OptionMenu(root, quality_var, "1", "2", "3", "4", "5").pack()
 
 
 
-// Update Submit Button Handler
+# Update Submit Button Handler
 def submit_sleep_data():
     date = date_entry.get()
     sleep_time = sleep_time_entry.get()
