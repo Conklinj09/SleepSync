@@ -1,7 +1,12 @@
 from flask import Flask, request, jsonify
+from flask import render_template
+# Create a Flask app
 
 app = Flask(__name__)
-
+# Create index route
+@app.route("/")
+def index():
+    return render_template('index.html')
 # Route to handle sleep data submission
 @app.route("/log_sleep", methods=["POST"])
 def log_sleep():
